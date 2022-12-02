@@ -5,8 +5,8 @@ export default async (app, _opts) => {
 	app.get('/', async (_req, reply) => {
 		reply.code(200).type('text/html').send('<code>https://embed.pkmn.dev/:id\n// :id is the species name of the Pokémon</code>');
 	});
-// respond to every /embed/:id request with the embed
-	app.get('/embed/:id', async (req, reply) => {
+// respond to every /:id request with the embed
+	app.get('/:id', async (req, reply) => {
 		// get the id from the request
 		const { id } = req.params;
 		// fetch the data from the API
