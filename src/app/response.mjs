@@ -10,7 +10,7 @@ export async function getEmbedHTML(mon) {
 
 	const flavor = flavorTexts[0].flavor;
 
-	const description = `Type: ${type1}${type2 ? `/${type2}` : ''}\nAbility: ${ability1}${ability2 ? `/${ability2}` : ''}${abilityHidden ? ` (Hidden: ${abilityHidden})` : ''}\nHeight: ${height} M Weight: ${weight} KG\n\n${flavor}\n\n${serebiiPage ? `Read more at ${serebiiPage}` : ''}`;
+	const description = `Type: ${type1}${type2 ? `/${type2}` : ''}\nAbility: ${ability1}${ability2 ? `/${ability2}` : ''}${abilityHidden ? ` | HA: ${abilityHidden}` : ''}\nDimensions: Height: ${height} M | Weight: ${weight} KG\n\n${flavor}`;
 
 	const embed = `
 	<html>
