@@ -1,12 +1,6 @@
 import { request } from "undici";
 
 export async function fetchMon(id) {
-	// check if id is a number
-	if (isNaN(id)) {
-		// if not, get the national dex number from the name
-		// id = mon.getPokemonByName(id).num;
-	}
-
 	const mon = await request('https://graphqlpokemon.favware.tech/v7', {
 		method: 'POST',
 		headers: {

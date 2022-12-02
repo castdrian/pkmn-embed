@@ -1,9 +1,9 @@
 import { fetchMon } from "./fetch.mjs";
 import { getEmbedHTML } from "./response.mjs";
 
-export default async (app, opts) => {
-	app.get('/', async (req, reply) => {
-		reply.code(200).type('text/html').send('<code>https://api.pkmn.dev/embed/:id\n// :id is the national dex number of the Pokémon or the species name</code>');
+export default async (app, _opts) => {
+	app.get('/', async (_req, reply) => {
+		reply.code(200).type('text/html').send('<code>https://embed.pkmn.dev/:id\n// :id is the species name of the Pokémon</code>');
 	});
 // respond to every /embed/:id request with the embed
 	app.get('/embed/:id', async (req, reply) => {

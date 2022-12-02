@@ -1,4 +1,4 @@
-export async function getEmbedHTML(mon, id) {
+export async function getEmbedHTML(mon) {
 	const { num, species, sprite, types, flavorTexts, height, weight, abilities, serebiiPage } = mon;
 
 	const type1 = types[0].name;
@@ -10,7 +10,7 @@ export async function getEmbedHTML(mon, id) {
 
 	const flavor = flavorTexts[0].flavor;
 
-	const description = `Type: ${type1}${type2 ? `/${type2}` : ''}\nAbility: ${ability1}${ability2 ? `/${ability2}` : ''}${abilityHidden ? ` (Hidden: ${abilityHidden})` : ''}\nHeight: ${height} M\nWeight: ${weight} KG\n\n${flavor}\n\n${serebiiPage ? `Read more at [Serebii.net](${serebiiPage}).` : ''}`;
+	const description = `Type: ${type1}${type2 ? `/${type2}` : ''}\nAbility: ${ability1}${ability2 ? `/${ability2}` : ''}${abilityHidden ? ` (Hidden: ${abilityHidden})` : ''}\nHeight: ${height} M Weight: ${weight} KG\n\n${flavor}\n\n${serebiiPage ? `Read more at ${serebiiPage}` : ''}`;
 
 	const embed = `
 	<html>
@@ -21,7 +21,7 @@ export async function getEmbedHTML(mon, id) {
 			<meta property="og:description" content="${description}" />
 		</head>
 		<body>
-			Please copy <a href="https://api.pkmn.dev/embed/${id}">https://api.pkmn.dev/embed/${id}</a> and paste it into a Discord channel.
+			Please copy <a href="https://embed.pkmn.dev/${species}">https://embed.pkmn.dev/${species}</a> and paste it into a Discord channel.
 		</body>
 	</html>
 	`
