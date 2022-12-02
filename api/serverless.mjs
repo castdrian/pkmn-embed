@@ -1,5 +1,6 @@
 // Require the framework
 import Fastify from "fastify";
+import disableCache from "fastify-disablecache";
 
 // Instantiate Fastify with some config
 const app = Fastify({
@@ -8,6 +9,7 @@ const app = Fastify({
 
 // Register your application as a normal plugin.
 app.register(import("../src/app/index.mjs"));
+app.register(disableCache);
 
 export default async (req, res) => {
     await app.ready();

@@ -10,6 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "fastify": "^4.10.2",
+    "fastify-disablecache": "^3.0.4",
     "undici": "^5.13.0"
   }
 }

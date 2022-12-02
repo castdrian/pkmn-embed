@@ -1,4 +1,5 @@
 import { fetchMon } from "./fetch.mjs";
+import { getEmbedHTML } from "./response.mjs";
 
 export default async (app, opts) => {
 	app.get('/', async (req, reply) => {
@@ -10,21 +11,8 @@ export default async (app, opts) => {
 		const { id } = req.params;
 		// fetch the data from the API
 		const mon = await fetchMon(id);
-		console.log(mon);
-
-		const html = `
-		<html>
-			<head>
-			<meta property="og:url" content="${mon.serebiiPage}" />
-			<meta property="og:title" content="#${mon.num} ${mon.species}" />
-			<meta property="og:image" content="${mon.sprite}" />
-			<meta property="og:description" content="${mon.flavorTexts[0].flavor}" />
-			</head>
-			<body>
-				Please copy <a href="https://api.pkmn.dev/embed/${id}">https://api.pkmn.dev/embed/${id}</a> and paste it into a Discord channel.
-			</body>
-		</html>
-		`
+		// get the embed html
+		const html = await getEmbedHTML(mon);
 		reply.code(200).type('text/html').send(html);
 	});
 }
