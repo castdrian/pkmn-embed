@@ -1,0 +1,15 @@
+{
+  "name": "pkmn-embed",
+  "version": "1.0.0",
+  "main": "index.mjs",
+  "scripts": {
+    "start": "vercel dev"
+  },
+  "repository": "https://github.com/castdrian/pkmn-embed.git",
+  "author": "Adrian Castro",
+  "license": "MIT",
+  "dependencies": {
+    "fastify": "^4.10.2",
+    "undici": "^5.13.0"
+  }
+}
