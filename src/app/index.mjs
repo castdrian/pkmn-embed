@@ -12,7 +12,7 @@ export default async (app, opts) => {
 		// fetch the data from the API
 		const mon = await fetchMon(id);
 		// get the embed html
-		const html = await getEmbedHTML(mon);
+		const html = await getEmbedHTML(mon, id);
 		reply.code(200).type('text/html').send(html);
 	});
 }

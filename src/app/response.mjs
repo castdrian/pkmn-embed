@@ -1,4 +1,4 @@
-export async function getEmbedHTML(mon) {
+export async function getEmbedHTML(mon, id) {
 	const { num, species, sprite, types, flavorTexts, height, weight, abilities, serebiiPage } = mon;
 
 	const type1 = types[0].name;
