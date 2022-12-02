@@ -15,13 +15,13 @@ export default async (app, opts) => {
 		const html = `
 		<html>
 			<head>
-			<meta property="og:title" content="#${mon.num} ${mon.species}" />
-			<meta property="og:thumbnail" content="${mon.sprite}" />
-			<meta property="og:description" content="${mon.flavorTexts[0].flavor}" />
 			<meta property="og:url" content="${mon.serebiiPage}" />
+			<meta property="og:title" content="#${mon.num} ${mon.species}" />
+			<meta property="og:image" content="${mon.sprite}" />
+			<meta property="og:description" content="${mon.flavorTexts[0].flavor}" />
 			</head>
 			<body>
-				Please copy https://api.pkmn.dev/embed/${id} and paste it into a Discord channel.
+				Please copy <a href="https://api.pkmn.dev/embed/${id}">https://api.pkmn.dev/embed/${id}</a> and paste it into a Discord channel.
 			</body>
 		</html>
 		`
