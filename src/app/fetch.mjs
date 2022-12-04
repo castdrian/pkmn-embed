@@ -32,6 +32,7 @@ export async function fetchMon(id) {
 					name
 				  }
 				}
+				color
 				serebiiPage
 			  }
 			}
