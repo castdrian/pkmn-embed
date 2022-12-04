@@ -1,26 +1,26 @@
 export function resolveColor(color) {
 	switch (color) {
 	  case 'Black':
-		return 0x323232;
+		return '#323232';
 	  case 'Blue':
-		return 0x257cff;
+		return '#257cff';
 	  case 'Brown':
-		return 0xa3501a;
+		return '#a3501a';
 	  case 'Gray':
-		return 0x969696;
+		return '#969696';
 	  case 'Green':
-		return 0x3eff4e;
+		return '#3eff4e';
 	  case 'Pink':
-		return 0xff65a5;
+		return '#ff65a5';
 	  case 'Purple':
-		return 0xa63de8;
+		return '#a63de8';
 	  case 'Red':
-		return 0xff3232;
+		return '#ff3232';
 	  case 'White':
-		return 0xe1e1e1;
+		return '#e1e1e1';
 	  case 'Yellow':
-		return 0xfff359;
+		return '#fff359';
 	  default:
-		return 0xff0000;
+		return '#ff0000';
 	}
 }
