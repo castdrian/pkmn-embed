@@ -11,7 +11,7 @@ export async function getEmbedHTML(mon, query) {
 	const abilityHidden = abilities.hidden ? abilities.hidden.name : null;
 
 	const { attack, defense, hp, specialattack, specialdefense, speed } = baseStats;
-	const stats = `${hp} HP / ${attack} Atk / ${defense} Def / ${specialattack} SpA / ${specialdefense} SpD / ${speed} Spe (Total: ${baseStatsTotal})`;
+	const stats = `${hp} HP / ${attack} Atk / ${defense} Def / ${specialattack} SpA / ${specialdefense} SpD / ${speed} Spe`;
 
 	const flavor = flavorTexts[0]?.flavor ?? 'No description available';
 	let thumbnail;
@@ -40,7 +40,7 @@ export async function getEmbedHTML(mon, query) {
 		<head>
 			<meta property="og:url" content="${serebiiPage}" />
 			<meta property="og:title" content="#${num} ${species.charAt(0).toUpperCase() + mon.species.slice(1)}" />
-			<meta property="og:image" content="${sprite}" />
+			<meta property="og:image" content="${thumbnail}" />
 			<meta property="og:description" content="${description}" />
 			<meta name="theme-color" content="${resolveColor(color)}" />
 		</head>
