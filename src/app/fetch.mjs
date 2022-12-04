@@ -13,6 +13,9 @@ export async function fetchMon(id) {
 				num
 				species
 				sprite
+				shinySprite
+				backSprite
+				shinyBackSprite
 				types {
 				  name
 				}
