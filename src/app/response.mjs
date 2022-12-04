@@ -10,7 +10,7 @@ export async function getEmbedHTML(mon) {
 	const ability2 = abilities.second ? abilities.second.name : null;
 	const abilityHidden = abilities.hidden ? abilities.hidden.name : null;
 
-	const flavor = flavorTexts[0].flavor ?? 'No description available';
+	const flavor = flavorTexts[0]?.flavor ?? 'No description available';
 
 	const description = `Type: ${type1}${type2 ? `/${type2}` : ''}\nAbility: ${ability1}${ability2 ? `/${ability2}` : ''}${abilityHidden ? ` | HA: ${abilityHidden}` : ''}\nDimensions: Height: ${height} M | Weight: ${weight} KG\n\n${flavor}`;
 
@@ -21,7 +21,7 @@ export async function getEmbedHTML(mon) {
 			<meta property="og:title" content="#${num} ${species.charAt(0).toUpperCase() + mon.species.slice(1)}" />
 			<meta property="og:image" content="${sprite}" />
 			<meta property="og:description" content="${description}" />
-			<meta name="theme-color" content="${resolveColor(color)}" />
+			<meta name="theme-color" content="#${resolveColor(color)}" />
 		</head>
 		<body>
 			Please copy <a href="https://embed.pkmn.dev/${species}">https://embed.pkmn.dev/${species}</a> and paste it into a Discord channel.
