@@ -16,6 +16,15 @@ export async function fetchMon(id) {
 				shinySprite
 				backSprite
 				shinyBackSprite
+				baseStats {
+					attack
+					defense
+					hp
+					specialattack
+					specialdefense
+					speed
+				}
+				baseStatsTotal
 				types {
 				  name
 				}
