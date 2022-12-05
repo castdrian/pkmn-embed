@@ -24,7 +24,6 @@ export async function fetchMon(id) {
 					specialdefense
 					speed
 				}
-				baseStatsTotal
 				types {
 				  name
 				}

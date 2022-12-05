@@ -38,6 +38,7 @@ export async function getEmbedHTML(mon, query) {
 	const embed = `
 	<html>
 		<head>
+			<link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/5/53/Pok%C3%A9_Ball_icon.svg">
 			<meta property="og:url" content="${serebiiPage}" />
 			<meta property="og:title" content="#${num} ${species.charAt(0).toUpperCase() + mon.species.slice(1)}" />
 			<meta property="og:image" content="${thumbnail}" />
