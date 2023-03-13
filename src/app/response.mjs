@@ -1,4 +1,4 @@
-import { resolveColor } from "./util.mjs";
+import { resolveColor, typeWithUnicodeEmoji } from "./util.mjs";
 
 export async function getEmbedHTML(mon, query) {
 	const { num, species, sprite, shinySprite, backSprite, shinyBackSprite, baseStats, types, flavorTexts, height, weight, abilities, color, serebiiPage } = mon;
@@ -32,7 +32,7 @@ export async function getEmbedHTML(mon, query) {
 			break;
 	}
 
-	const description = `Type: ${type1}${type2 ? `/${type2}` : ''}\nAbility: ${ability1}${ability2 ? `/${ability2}` : ''}${abilityHidden ? ` | HA: ${abilityHidden}` : ''}\nDimensions: Height: ${height} M | Weight: ${weight} KG\nBase Stats: ${stats}\n\n${flavor}`;
+	const description = `Type: ${typeWithUnicodeEmoji(type1)}${type2 ? `/${typeWithUnicodeEmoji(type2)}` : ''}\nAbility: ${ability1}${ability2 ? `/${ability2}` : ''}${abilityHidden ? ` | HA: ${abilityHidden}` : ''}\nDimensions: Height: ${height} M | Weight: ${weight} KG\nBase Stats: ${stats}\n\n${flavor}`;
 	const url = query ? `https://embed.pkmn.dev/${species}?sprite=${query}` : `https://embed.pkmn.dev/${species}`;
 
 	const embed = `
