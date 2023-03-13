@@ -28,9 +28,9 @@ export function resolveColor(color) {
 export function typeWithUnicodeEmoji(type) {
 	switch (type) {
 		case 'Bug':
-			return 'Bug🪲';
+			return 'Bug🦋';
 		case 'Dark':
-			return 'Dark🌑';
+			return 'Dark🌙';
 		case 'Dragon':
 			return 'Dragon🐉';
 		case 'Electric':
@@ -58,7 +58,7 @@ export function typeWithUnicodeEmoji(type) {
 		case 'Psychic':
 			return 'Psychic☯️';
 		case 'Rock':
-			return 'Rock🪨';
+			return 'Rock🗿';
 		case 'Steel':
 			return 'Steel⚙️';
 		case 'Water':
