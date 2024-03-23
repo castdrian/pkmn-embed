@@ -1,7 +1,7 @@
 import { request } from "undici";
 
 export async function fetchMon(id) {
-	const mon = await request('https://graphqlpokemon.favware.tech', {
+	const mon = await request('https://graphqlpokemon.favware.tech/v8', {
 		method: 'POST',
 		headers: {
 		  'Content-Type': 'application/json'
