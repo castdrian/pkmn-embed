@@ -1,7 +1,7 @@
 import { resolveColor, typeWithUnicodeEmoji } from "./util.mjs";
 
 export async function getEmbedHTML(mon, query) {
-	const { num, species, sprite, shinySprite, backSprite, shinyBackSprite, baseStats, types, flavorTexts, height, weight, abilities, color, serebiiPage } = mon;
+	const { num, species, baseSpecies, classification, forme, sprite, shinySprite, backSprite, shinyBackSprite, baseStats, types, flavorTexts, height, weight, abilities, color, serebiiPage } = mon;
 
 	const type1 = types[0].name;
 	const type2 = types[1] ? types[1].name : null;
@@ -32,7 +32,7 @@ export async function getEmbedHTML(mon, query) {
 			break;
 	}
 
-	const description = `Type: ${typeWithUnicodeEmoji(type1)}${type2 ? `/${typeWithUnicodeEmoji(type2)}` : ''}\nAbility: ${ability1}${ability2 ? `/${ability2}` : ''}${abilityHidden ? ` | HA: ${abilityHidden}` : ''}\nDimensions: Height: ${height} M | Weight: ${weight} KG\nBase Stats: ${stats}\n\n${flavor}`;
+	const description = `${classification ? `The ${classification}\n\n` : ""}Type: ${typeWithUnicodeEmoji(type1)}${type2 ? ` ${typeWithUnicodeEmoji(type2)}` : ''}\nAbility: ${ability1}${ability2 ? `/${ability2}` : ''}${abilityHidden ? ` | HA: ${abilityHidden}` : ''}\nDimensions: Height: ${height} M | Weight: ${weight} KG\nBase Stats: ${stats}\n\n${flavor}`;
 	const url = query ? `https://embed.pkmn.dev/${species}?sprite=${query}` : `https://embed.pkmn.dev/${species}`;
 
 	const embed = `
@@ -40,7 +40,7 @@ export async function getEmbedHTML(mon, query) {
 		<head>
 			<link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/5/53/Pok%C3%A9_Ball_icon.svg">
 			<meta property="og:url" content="${serebiiPage}" />
-			<meta property="og:title" content="#${num} ${species.charAt(0).toUpperCase() + mon.species.slice(1)}" />
+			<meta property="og:title" content="#${num} ${baseSpecies ? baseSpecies.charAt(0).toUpperCase() + baseSpecies.slice(1) : species.charAt(0).toUpperCase() + species.slice(1)}${forme ? ` (${forme})` : ''}" />
 			<meta property="og:image" content="${thumbnail}" />
 			<meta property="og:description" content="${description}" />
 			<meta name="theme-color" content="${resolveColor(color)}" />

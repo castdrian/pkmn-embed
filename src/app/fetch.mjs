@@ -12,6 +12,9 @@ export async function fetchMon(id) {
 			  getFuzzyPokemon(pokemon: "${id}") {
 				num
 				species
+				baseSpecies
+				classification
+				forme
 				sprite
 				shinySprite
 				backSprite
