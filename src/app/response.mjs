@@ -1,7 +1,7 @@
 import { resolveColor, typeWithUnicodeEmoji } from "./util.mjs";
 
 export async function getEmbedHTML(mon, query) {
-	const { num, species, baseSpecies, classification, forme, sprite, shinySprite, backSprite, shinyBackSprite, baseStats, types, flavorTexts, height, weight, abilities, color, serebiiPage } = mon;
+	const { num, species, baseSpecies, classification, gender, catchRate, forme, sprite, shinySprite, backSprite, shinyBackSprite, baseStats, types, flavorTexts, height, weight, abilities, color, serebiiPage } = mon;
 
 	const type1 = types[0].name;
 	const type2 = types[1] ? types[1].name : null;
@@ -14,6 +14,8 @@ export async function getEmbedHTML(mon, query) {
 	const stats = `${hp} HP / ${attack} Atk / ${defense} Def / ${specialattack} SpA / ${specialdefense} SpD / ${speed} Spe`;
 
 	const flavor = flavorTexts[0]?.flavor ?? 'No description available';
+	const { percentageWithOrdinaryPokeballAtFullHealth } = catchRate;
+	
 	let thumbnail;
 
 	switch (query) {
@@ -32,7 +34,7 @@ export async function getEmbedHTML(mon, query) {
 			break;
 	}
 
-	const description = `${classification ? `The ${classification}\n\n` : ""}Type: ${typeWithUnicodeEmoji(type1)}${type2 ? ` ${typeWithUnicodeEmoji(type2)}` : ''}\nAbility: ${ability1}${ability2 ? `/${ability2}` : ''}${abilityHidden ? ` | HA: ${abilityHidden}` : ''}\nDimensions: Height: ${height} M | Weight: ${weight} KG\nBase Stats: ${stats}\n\n${flavor}\n\n🪙 consider [donating on ko-fi](https://ko-fi.com/castdrian) if you like this embed service`;
+	const description = `${classification ? `The ${classification}\n\n` : ""}♂️ ${gender.male} ♀️ ${gender.female} ◓ ${percentageWithOrdinaryPokeballAtFullHealth}\nType: ${typeWithUnicodeEmoji(type1)}${type2 ? ` ${typeWithUnicodeEmoji(type2)}` : ''}\nAbility: ${ability1}${ability2 ? `/${ability2}` : ''}${abilityHidden ? ` | HA: ${abilityHidden}` : ''}\nDimensions: Height: ${height} M | Weight: ${weight} KG\nBase Stats: ${stats}\n\n${flavor}\n\n🪙 consider [donating on ko-fi](https://ko-fi.com/castdrian) if you like this embed service`;
 	const url = query ? `https://embed.pkmn.dev/${species}?sprite=${query}` : `https://embed.pkmn.dev/${species}`;
 
 	const embed = `
