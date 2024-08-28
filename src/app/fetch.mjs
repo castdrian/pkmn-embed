@@ -19,6 +19,15 @@ export async function fetchMon(id) {
 				shinySprite
 				backSprite
 				shinyBackSprite
+				gender {
+				      female
+				      male
+				}
+			    	catchRate {
+			      		base
+			      		percentageWithOrdinaryPokeballAtFullHealth
+			    	}
+			    	classification
 				baseStats {
 					attack
 					defense
