@@ -1,7 +1,7 @@
 import { resolveColor, typeWithUnicodeEmoji } from "./util.mjs";
 
 export async function getEmbedHTML(mon, query) {
-	const { num, species, baseSpecies, classification, gender, catchRate, forme, sprite, shinySprite, backSprite, shinyBackSprite, baseStats, types, flavorTexts, height, weight, abilities, color, serebiiPage } = mon;
+	const { num, species, baseSpecies, classification, gender, catchRate, forme, sprite, shinySprite, backSprite, shinyBackSprite, baseStats, types, flavorTexts, height, weight, abilities, color, smogonTier } = mon;
 
 	const type1 = types[0].name;
 	const type2 = types[1] ? types[1].name : null;
@@ -34,14 +34,13 @@ export async function getEmbedHTML(mon, query) {
 			break;
 	}
 
-	const description = `${classification ? `The ${classification}\n` : ""}♂️ ${gender.male} ♀️ ${gender.female} ◓ ${percentageWithOrdinaryPokeballAtFullHealth}\n\nType: ${typeWithUnicodeEmoji(type1)}${type2 ? ` ${typeWithUnicodeEmoji(type2)}` : ''}\nAbility: ${ability1}${ability2 ? `/${ability2}` : ''}${abilityHidden ? ` | HA: ${abilityHidden}` : ''}\nDimensions: Height: ${height} M | Weight: ${weight} KG\nBase Stats: ${stats}\n\n${flavor}\n\n🪙 consider donating on ko-fi.com/castdrian`;
+	const description = `${classification ? `The ${classification}\n` : ""}♂️ ${gender.male} ♀️ ${gender.female} ◓ ${percentageWithOrdinaryPokeballAtFullHealth}\n\nType: ${typeWithUnicodeEmoji(type1)}${type2 ? ` ${typeWithUnicodeEmoji(type2)}` : ''}\nAbility: ${ability1}${ability2 ? `/${ability2}` : ''}${abilityHidden ? ` | HA: ${abilityHidden}` : ''}\nDimensions: Height: ${height} M | Weight: ${weight} KG\nBase Stats: ${stats}\n\n${flavor}\nSmogon: ${smogonTier}\n\n🪙 consider donating on ko-fi.com/castdrian`;
 	const url = query ? `https://embed.pkmn.dev/${species}?sprite=${query}` : `https://embed.pkmn.dev/${species}`;
 
 	const embed = `
 	<html>
 		<head>
 			<link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/5/53/Pok%C3%A9_Ball_icon.svg">
-			<meta property="og:url" content="https://ko-fi.com/castdrian" />
 			<meta property="og:title" content="#${num} ${baseSpecies ? baseSpecies.charAt(0).toUpperCase() + baseSpecies.slice(1) : species.charAt(0).toUpperCase() + species.slice(1)}${forme ? ` (${forme})` : ''}" />
 			<meta property="og:image" content="${thumbnail}" />
 			<meta property="og:description" content="${description}" />
