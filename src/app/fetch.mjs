@@ -27,7 +27,6 @@ export async function fetchMon(id) {
 			      		base
 			      		percentageWithOrdinaryPokeballAtFullHealth
 			    	}
-			    	classification
 				baseStats {
 					attack
 					defense
