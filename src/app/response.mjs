@@ -34,7 +34,7 @@ export async function getEmbedHTML(mon, query) {
 			break;
 	}
 
-	const description = `${classification ? `The ${classification}\n` : ""}♂️ ${gender.male} ♀️ ${gender.female} ◓ ${percentageWithOrdinaryPokeballAtFullHealth}\n\nType: ${typeWithUnicodeEmoji(type1)}${type2 ? ` ${typeWithUnicodeEmoji(type2)}` : ''}\nAbility: ${ability1}${ability2 ? `/${ability2}` : ''}${abilityHidden ? ` | HA: ${abilityHidden}` : ''}\nDimensions: Height: ${height} M | Weight: ${weight} KG\nBase Stats: ${stats}\n\n${flavor}\n\n🪙 consider donating via ko-fi`;
+	const description = `${classification ? `The ${classification}\n` : ""}♂️ ${gender.male} ♀️ ${gender.female} ◓ ${percentageWithOrdinaryPokeballAtFullHealth}\n\nType: ${typeWithUnicodeEmoji(type1)}${type2 ? ` ${typeWithUnicodeEmoji(type2)}` : ''}\nAbility: ${ability1}${ability2 ? `/${ability2}` : ''}${abilityHidden ? ` | HA: ${abilityHidden}` : ''}\nDimensions: Height: ${height} M | Weight: ${weight} KG\nBase Stats: ${stats}\n\n${flavor}\n\n🪙 consider donating on ko-fi.com/castdrian`;
 	const url = query ? `https://embed.pkmn.dev/${species}?sprite=${query}` : `https://embed.pkmn.dev/${species}`;
 
 	const embed = `
