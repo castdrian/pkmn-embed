@@ -34,14 +34,14 @@ export async function getEmbedHTML(mon, query) {
 			break;
 	}
 
-	const description = `${classification ? `The ${classification}\n` : ""}♂️ ${gender.male} ♀️ ${gender.female} ◓ ${percentageWithOrdinaryPokeballAtFullHealth}\n\nType: ${typeWithUnicodeEmoji(type1)}${type2 ? ` ${typeWithUnicodeEmoji(type2)}` : ''} | Tier: ${smogonTier}\nAbility: ${ability1}${ability2 ? `/${ability2}` : ''}${abilityHidden ? ` | HA: ${abilityHidden}` : ''}\nDimensions: Height: ${height} M | Weight: ${weight} KG\nBase Stats: ${stats}\n\n${flavor}\n\n🪙 consider donating on ko-fi.com/castdrian`;
+	const description = `${classification ? `The ${classification}\n` : ""}\n\nType: ${typeWithUnicodeEmoji(type1)}${type2 ? ` ${typeWithUnicodeEmoji(type2)}` : ''} | Tier: ${smogonTier}\nAbility: ${ability1}${ability2 ? `/${ability2}` : ''}${abilityHidden ? ` | HA: ${abilityHidden}` : ''}\nDimensions: Height: ${height} M | Weight: ${weight} KG\nBase Stats: ${stats}\n\n${flavor}\n\n🪙 consider donating on ko-fi.com/castdrian`;
 	const url = query ? `https://embed.pkmn.dev/${species}?sprite=${query}` : `https://embed.pkmn.dev/${species}`;
 
 	const embed = `
 	<html>
 		<head>
 			<link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/5/53/Pok%C3%A9_Ball_icon.svg">
-			<meta property="og:title" content="#${num} ${baseSpecies ? baseSpecies.charAt(0).toUpperCase() + baseSpecies.slice(1) : species.charAt(0).toUpperCase() + species.slice(1)}${forme ? ` (${forme})` : ''}" />
+			<meta property="og:title" content="#${num} ${baseSpecies ? `${baseSpecies.charAt(0).toUpperCase()}${baseSpecies.slice(1)}` : `${species.charAt(0).toUpperCase()}${species.slice(1)}`}${forme ? ` (${forme})` : ''} (♂️ ${gender.male} ♀️ ${gender.female} ◓ ${percentageWithOrdinaryPokeballAtFullHealth})" />
 			<meta property="og:image" content="${thumbnail}" />
 			<meta property="og:description" content="${description}" />
 			<meta name="theme-color" content="${resolveColor(color)}" />
