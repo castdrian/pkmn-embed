@@ -55,7 +55,7 @@ export async function fetchMon(id) {
 				  }
 				}
 				color
-				serebiiPage
+				smogonTier
 			  }
 			}
 		  `
