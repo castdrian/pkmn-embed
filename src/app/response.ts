@@ -50,7 +50,7 @@ export function getEmbedHTML(mon: Pokemon, query?: string | null, thumbnail = ge
 		</head>
 		<body>
 			<p>Please copy <a href="${url}">${url}</a> and paste it into a Discord channel.</p>
-			<p><a href="https://ko-fi.com/castdrian" target="_blank" rel="noopener noreferrer" style="display: inline-block; padding: 0.65rem 1rem; border-radius: 0.5rem; background: #ff5e5b; color: white; font-weight: 700; text-decoration: none;">☕ Support this project</a></p>
+			<p><a href="https://ko-fi.com/castdrian" target="_blank" rel="noopener noreferrer" style="display: inline-block; padding: 0.65rem 1rem; border-radius: 0.5rem; background: #13c3ff; color: #082032; font-weight: 700; text-decoration: none;">☕ Support this project</a></p>
 		</body>
 	</html>
 	`;
