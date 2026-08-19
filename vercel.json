@@ -1,8 +1,11 @@
 {
+    "$schema": "https://openapi.vercel.sh/vercel.json",
+    "bunVersion": "1.x",
+    "outputDirectory": ".",
     "rewrites": [
         {
             "source": "/(.*)",
-            "destination": "/api/serverless.mjs"
+            "destination": "/api/serverless.ts"
         }
     ]
 }
