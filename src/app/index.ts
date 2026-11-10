@@ -6,6 +6,7 @@ export function getIndexHTML(): string {
 		</head>
 		<body>
 			<p>Replace <code>:id</code> with a Pokémon species name in <code>https://embed.pkmn.dev/:id</code>.</p>
+			<p>Use <code>?sprite=shiny</code>, <code>?sprite=back</code>, or <code>?sprite=shiny%26back</code> to select a sprite.</p>
 		</body>
 	</html>`;
 }

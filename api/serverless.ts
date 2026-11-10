@@ -1,7 +1,7 @@
 import { fetchMon } from "../src/app/fetch";
 import { getIndexHTML } from "../src/app/index";
 import { getEmbedHTML } from "../src/app/response";
-import { resolveSprite, spriteVariants } from "../src/app/sprites";
+import { resolveSprite } from "../src/app/sprites";
 
 const htmlHeaders = {
 	"Content-Type": "text/html; charset=utf-8",
@@ -29,8 +29,8 @@ export default {
 
 		const id = decodeURIComponent(pathSegments[0] ?? "");
 		const mon = await fetchMon(id);
-		const sprites = await Promise.all(spriteVariants.map((variant) => resolveSprite(mon, variant)));
-		const html = getEmbedHTML(mon, sprites);
+		const query = url.searchParams.get("sprite");
+		const html = getEmbedHTML(mon, query, await resolveSprite(mon, query));
 
 		return htmlResponse(html);
 	},
