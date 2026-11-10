@@ -70,17 +70,22 @@ export function getEmbedHTML(mon: Pokemon, query?: string | null, thumbnail = ge
 	const title = `#${num} ${name.charAt(0).toUpperCase()}${name.slice(1)}${forme ? ` (${forme})` : ""}`;
 	const demographics = `♂️ ${gender.male} ♀️ ${gender.female}`;
 	const accent = resolveColor(color);
-	const heading = `## ${escapeMarkdown(title)}${classification ? `\n-# The ${escapeMarkdown(classification)}` : ""}`;
 	const icons = types.map(({ name }) => typeIcons.get(name)).filter(Boolean).join(" ");
+	const heading = [
+		`## ${escapeMarkdown(title)}`,
+		...(classification ? [`-# The ${escapeMarkdown(classification)}`] : []),
+		`${icons ? `${icons} · ` : ""}**Tier** ${escapeMarkdown(smogonTier)}`,
+	].join("\n");
 	const abilityNames = [ability1, ability2].filter(Boolean).join(" / ");
 	const details = [
-		`${icons ? `${icons} · ` : ""}**Tier** ${escapeMarkdown(smogonTier)}`,
 		`**Abilities** ${escapeMarkdown(abilityNames)}${abilityHidden ? ` · **Hidden** ${escapeMarkdown(abilityHidden)}` : ""}`,
 		`**Height** ${height} m · **Weight** ${weight} kg`,
 		`**Gender** ${escapeMarkdown(demographics)} · **Catch chance** ${escapeMarkdown(percentageWithOrdinaryPokeballAtFullHealth)}`,
-		`**Base stats** ${stats}`,
+		"**Base stats**",
+		`${hp} HP · ${attack} Atk · ${defense} Def`,
+		`${specialattack} SpA · ${specialdefense} SpD · ${speed} Spe`,
 	].join("\n");
-	const payload = getComponentEmbed(mon, accent, thumbnail, heading, details, flavor);
+	const payload = getComponentEmbed(mon, accent, thumbnail, heading, details, flavor.trim());
 
 	return `
 	<html>

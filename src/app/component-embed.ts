@@ -62,10 +62,7 @@ export function getComponentEmbed(
 	details: string,
 	flavor: string,
 ): string {
-	const title = textDisplay(heading);
-	const header = isSpriteURL(sprite)
-		? { type: 9, components: [title], accessory: { type: 11, media: { url: sprite } } }
-		: title;
+	const gallery = isSpriteURL(sprite) ? [{ type: 12, items: [{ media: { url: sprite } }] }] : [];
 	const divider = { type: 14, spacing: 1 };
 	const links = referenceLinks(mon);
 	const actions = links.length ? [divider, { type: 1, components: links }] : [];
@@ -74,8 +71,9 @@ export function getComponentEmbed(
 			type: 17,
 			accent_color: Number.parseInt(color.slice(1), 16),
 			components: [
-				header,
-				...(excerpt ? [textDisplay(escapeMarkdown(excerpt))] : []),
+				textDisplay(heading),
+				...gallery,
+				...(excerpt ? [textDisplay(`*${escapeMarkdown(excerpt)}*`)] : []),
 				divider,
 				textDisplay(details),
 				...actions,
