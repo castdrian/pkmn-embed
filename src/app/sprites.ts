@@ -27,42 +27,25 @@ const spriteAvailability = new Map<string, Promise<boolean>>();
 const indexResponses = new Map<string, Promise<string | null>>();
 const requestTimeoutMs = 2500;
 
-export function getSpriteVariant(query?: string | null): SpriteVariant {
-	switch (query) {
-		case "shiny":
-			return { facing: "front", shiny: true };
-		case "back":
-			return { facing: "back", shiny: false };
-		case "shiny&back":
-		case "back&shiny":
-			return { facing: "back", shiny: true };
-		default:
-			return { facing: "front", shiny: false };
-	}
-}
+export const spriteVariants = [
+	{ facing: "front", shiny: false, label: "Front" },
+	{ facing: "back", shiny: false, label: "Back" },
+	{ facing: "front", shiny: true, label: "Shiny front" },
+	{ facing: "back", shiny: true, label: "Shiny back" },
+] as const;
 
-export function getFallbackSprite(mon: Pokemon, query?: string | null): string {
-	switch (query) {
-		case "shiny":
-			return mon.shinySprite;
-		case "back":
-			return mon.backSprite;
-		case "shiny&back":
-		case "back&shiny":
-			return mon.shinyBackSprite;
-		default:
-			return mon.sprite;
-	}
+export function getFallbackSprite(mon: Pokemon, { facing, shiny }: SpriteVariant): string {
+	if (facing === "back") return shiny ? mon.shinyBackSprite : mon.backSprite;
+	return shiny ? mon.shinySprite : mon.sprite;
 }
 
 export async function resolveSprite(
 	mon: Pokemon,
-	query?: string | null,
+	variant: SpriteVariant,
 	fetcher: typeof fetch = globalThis.fetch,
 ): Promise<string> {
-	const variant = getSpriteVariant(query);
 	const animatedSprite = await findHighResolutionAnimatedSprite(mon, variant, fetcher);
-	return animatedSprite ?? getFallbackSprite(mon, query);
+	return animatedSprite ?? getFallbackSprite(mon, variant);
 }
 
 export function getHighResolutionSpriteCandidates(mon: Pokemon, variant: SpriteVariant): string[] {

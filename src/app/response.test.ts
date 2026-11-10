@@ -26,18 +26,12 @@ const pikachu: Pokemon = {
 };
 
 test("keeps the donation link out of the Open Graph description", () => {
-	const html = getEmbedHTML(pikachu, null, pikachu.sprite);
+	const html = getEmbedHTML(pikachu);
 	const openGraphDescription = html.match(/<meta property="og:description"[^>]+>/)?.[0] ?? "";
 
 	expect(openGraphDescription).not.toContain("ko-fi");
 	expect(html).toContain("https://ko-fi.com/castdrian");
 	expect(html).toContain("A test description.");
-});
-
-test("selects the requested sprite variant", () => {
-	const html = getEmbedHTML(pikachu, "shiny", pikachu.shinySprite);
-
-	expect(html).toContain(pikachu.shinySprite);
 });
 
 test("prefers an available HD animated sprite", async () => {
@@ -49,42 +43,48 @@ test("prefers an available HD animated sprite", async () => {
 		return new Response(null, { status: 404 });
 	};
 
-	expect(await resolveSprite(pikachu, null, fetcher)).toBe(hdSprite);
+	expect(await resolveSprite(pikachu, { facing: "front", shiny: false }, fetcher)).toBe(hdSprite);
 });
 
 test("falls back to the API sprite when no HD animated sprite is available", async () => {
 	const fetcher: typeof fetch = async () => new Response(null, { status: 404 });
 
-	expect(await resolveSprite(pikachu, "back", fetcher)).toBe(pikachu.backSprite);
+	expect(await resolveSprite(pikachu, { facing: "back", shiny: false }, fetcher)).toBe(pikachu.backSprite);
 });
 
 function componentJSON(html: string): string | undefined {
 	return html.match(/<script id="discord:component-embed" type="application\/json">([\s\S]*?)<\/script>/)?.[1];
 }
 
-test("renders a single accented container with sprite, byline, flavor, stats and reference buttons", () => {
-	const html = getEmbedHTML(pikachu, "shiny&back", pikachu.shinyBackSprite);
+test("renders a single accented container with byline, four sprites, flavor, stats and reference buttons", () => {
+	const html = getEmbedHTML(pikachu);
 	const { component } = JSON.parse(componentJSON(html)!);
 
 	expect(component).toMatchObject({ type: 17, accent_color: 0xfff359 });
-	expect(component.components.map(({ type }: { type: number }) => type)).toEqual([12, 10, 10, 14, 10, 1]);
-	expect(component.components[0].items).toEqual([{ media: { url: pikachu.shinyBackSprite } }]);
-	expect(component.components[1].content).toContain("\n-# The Mouse Pokémon");
+	expect(component.components.map(({ type }: { type: number }) => type)).toEqual([10, 12, 10, 14, 10, 14, 1]);
+	expect(component.components[1].items).toEqual([
+		{ media: { url: pikachu.sprite }, description: "Front" },
+		{ media: { url: pikachu.backSprite }, description: "Back" },
+		{ media: { url: pikachu.shinySprite }, description: "Shiny front" },
+		{ media: { url: pikachu.shinyBackSprite }, description: "Shiny back" },
+	]);
+	expect(component.components[0].content).toContain("\n-# The Mouse Pokémon");
 	expect(component.components[4].content).toContain("35 HP");
 	expect(component.components[2].content).toContain("A test description");
-	expect(component.components[5].components).toEqual([
+	expect(component.components[6].components).toEqual([
 		{ type: 2, style: 5, label: "Serebii", url: "https://www.serebii.net/pokemon/pikachu" },
 		{ type: 2, style: 5, label: "Pokémon Database", url: "https://pokemondb.net/pokedex/pikachu" },
 	]);
 	expect(html).toContain('name="theme-color"');
-	expect(html).toContain("?sprite=shiny%26back");
+	expect(html).not.toContain("?sprite=");
 });
 
 test("links alternate forms to the base species and omits an invalid sprite", () => {
-	const html = getEmbedHTML({ ...pikachu, num: 122, species: "mr-mime-galar", baseSpecies: "Mr. Mime", forme: "Galar" }, null, "");
+	const html = getEmbedHTML({ ...pikachu, num: 122, species: "mr-mime-galar", baseSpecies: "Mr. Mime", forme: "Galar" }, ["", pikachu.backSprite]);
 	const { component } = JSON.parse(componentJSON(html)!);
 
 	expect(component.components[0]).toMatchObject({ type: 10, content: expect.stringContaining("Galar") });
+	expect(component.components[1].items).toEqual([{ media: { url: pikachu.backSprite }, description: "Back" }]);
 	expect(component.components.at(-1).components.map(({ url }: { url: string }) => url)).toEqual([
 		"https://www.serebii.net/pokemon/mr.mime",
 		"https://pokemondb.net/pokedex/mr-mime",
