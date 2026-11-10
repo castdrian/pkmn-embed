@@ -49,7 +49,7 @@ export function getEmbedHTML(mon: Pokemon, query?: string | null, thumbnail = ge
 	const title = `#${num} ${name.charAt(0).toUpperCase()}${name.slice(1)}${forme ? ` (${forme})` : ""}`;
 	const demographics = `♂️ ${gender.male} ♀️ ${gender.female}`;
 	const accent = resolveColor(color);
-	const heading = `## ${escapeMarkdown(title)}${classification ? `\n${escapeMarkdown(classification)}` : ""}`;
+	const heading = `## ${escapeMarkdown(title)}${classification ? `\n-# The ${escapeMarkdown(classification)}` : ""}`;
 	const typeNames = types.slice(0, 2).map(({ name }) => typeWithUnicodeEmoji(name)).join(" · ");
 	const abilityNames = [ability1, ability2].filter(Boolean).join(" / ");
 	const details = [
