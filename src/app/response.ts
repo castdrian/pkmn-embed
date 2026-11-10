@@ -72,20 +72,20 @@ export function getEmbedHTML(mon: Pokemon, query?: string | null, thumbnail = ge
 	const accent = resolveColor(color);
 	const icons = types.map(({ name }) => typeIcons.get(name)).filter(Boolean).join(" ");
 	const heading = [
-		`## ${escapeMarkdown(title)}`,
+		`**${escapeMarkdown(title)}**`,
 		...(classification ? [`-# The ${escapeMarkdown(classification)}`] : []),
-		`${icons ? `${icons} · ` : ""}**Tier** ${escapeMarkdown(smogonTier)}`,
 	].join("\n");
+	const typeLine = `${icons ? `${icons} · ` : ""}**Tier** ${escapeMarkdown(smogonTier)}`;
 	const abilityNames = [ability1, ability2].filter(Boolean).join(" / ");
 	const details = [
 		`**Abilities** ${escapeMarkdown(abilityNames)}${abilityHidden ? ` · **Hidden** ${escapeMarkdown(abilityHidden)}` : ""}`,
 		`**Height** ${height} m · **Weight** ${weight} kg`,
-		`**Gender** ${escapeMarkdown(demographics)} · **Catch chance** ${escapeMarkdown(percentageWithOrdinaryPokeballAtFullHealth)}`,
+		`**Gender** ${escapeMarkdown(demographics)} · **Catch rate** ${escapeMarkdown(percentageWithOrdinaryPokeballAtFullHealth)}`,
 		"**Base stats**",
 		`${hp} HP · ${attack} Atk · ${defense} Def`,
 		`${specialattack} SpA · ${specialdefense} SpD · ${speed} Spe`,
 	].join("\n");
-	const payload = getComponentEmbed(mon, accent, thumbnail, heading, details, flavor.trim());
+	const payload = getComponentEmbed(mon, accent, thumbnail, heading, typeLine, details, flavor.trim());
 
 	return `
 	<html>
