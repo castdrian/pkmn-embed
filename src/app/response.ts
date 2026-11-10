@@ -50,10 +50,12 @@ export function getEmbedHTML(mon: Pokemon, query?: string | null, thumbnail = ge
 	const demographics = `♂️ ${gender.male} ♀️ ${gender.female}`;
 	const accent = resolveColor(color);
 	const heading = `## ${escapeMarkdown(title)}${classification ? `\n-# The ${escapeMarkdown(classification)}` : ""}`;
-	const typeNames = types.slice(0, 2).map(({ name }) => typeWithUnicodeEmoji(name)).join(" · ");
+	const typeNames = types.slice(0, 2).map(({ name }) => name === "Water"
+		? "Water <:water_type:1015060946479222856>"
+		: escapeMarkdown(typeWithUnicodeEmoji(name))).join(" · ");
 	const abilityNames = [ability1, ability2].filter(Boolean).join(" / ");
 	const details = [
-		`**Type** ${escapeMarkdown(typeNames)} · **Tier** ${escapeMarkdown(smogonTier)}`,
+		`**Type** ${typeNames} · **Tier** ${escapeMarkdown(smogonTier)}`,
 		`**Abilities** ${escapeMarkdown(abilityNames)}${abilityHidden ? ` · **Hidden** ${escapeMarkdown(abilityHidden)}` : ""}`,
 		`**Height** ${height} m · **Weight** ${weight} kg`,
 		`**Gender** ${escapeMarkdown(demographics)} · **Catch chance** ${escapeMarkdown(percentageWithOrdinaryPokeballAtFullHealth)}`,
