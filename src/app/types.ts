@@ -33,6 +33,7 @@ export interface Pokemon {
 		hidden: { name: string } | null;
 	};
 	color: string;
+	smogonPage: string;
 	smogonTier: string;
 }
 

@@ -61,7 +61,7 @@ function referenceLinks(mon: Pokemon) {
 	const serebiiSlug = serebiiSlugByDexNumber.get(mon.num) ?? slug.replaceAll("-", "");
 	return [
 		{ type: 2, style: 5, label: "Serebii", url: `https://www.serebii.net/pokemon/${serebiiSlug}` },
-		{ type: 2, style: 5, label: "Pokémon Database", url: `https://pokemondb.net/pokedex/${slug}` },
+		{ type: 2, style: 5, label: "Smogon", url: mon.smogonPage },
 	];
 }
 
