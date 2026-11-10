@@ -3,6 +3,27 @@ import { resolveColor, typeWithUnicodeEmoji } from "./util";
 import { getFallbackSprite } from "./sprites";
 import type { Pokemon } from "./types";
 
+const typeIcons = new Map([
+	["Bug", "<:bugtype:1038083428156985354>"],
+	["Dark", "<:darktype:1038083430166044773>"],
+	["Dragon", "<:dragontype:1038083431592112169>"],
+	["Electric", "<:electrictype:1038083433500528730>"],
+	["Fairy", "<:fairytype:1038083435106938980>"],
+	["Fighting", "<:fighting:1038083436654624918>"],
+	["Fire", "<:firetype:1038083438344949860>"],
+	["Flying", "<:flyingtype:1038083439905226822>"],
+	["Ghost", "<:ghosttype:1038083441524220024>"],
+	["Grass", "<:grasstype:1038083443445203064>"],
+	["Ground", "<:groundtype:1038083445085196388>"],
+	["Ice", "<:icetype:1038083447102652446>"],
+	["Normal", "<:normaltype:1038083448906199120>"],
+	["Poison", "<:poisontype:1038083450927853618>"],
+	["Psychic", "<:psychictype:1038083452601389119>"],
+	["Rock", "<:rocktype:1038083454883074118>"],
+	["Steel", "<:steeltype:1038083456707612762>"],
+	["Water", "<:watertype:1038083426110160926>"],
+]);
+
 function escapeHTML(value: string): string {
 	return value.replaceAll("&", "&amp;").replaceAll('"', "&quot;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 }
@@ -50,10 +71,10 @@ export function getEmbedHTML(mon: Pokemon, query?: string | null, thumbnail = ge
 	const demographics = `♂️ ${gender.male} ♀️ ${gender.female}`;
 	const accent = resolveColor(color);
 	const heading = `## ${escapeMarkdown(title)}${classification ? `\n-# The ${escapeMarkdown(classification)}` : ""}`;
-	const typeNames = types.slice(0, 2).map(({ name }) => typeWithUnicodeEmoji(name)).join(" · ");
+	const icons = types.map(({ name }) => typeIcons.get(name)).filter(Boolean).join(" ");
 	const abilityNames = [ability1, ability2].filter(Boolean).join(" / ");
 	const details = [
-		`**Type** ${escapeMarkdown(typeNames)} · **Tier** ${escapeMarkdown(smogonTier)}`,
+		`${icons ? `${icons} · ` : ""}**Tier** ${escapeMarkdown(smogonTier)}`,
 		`**Abilities** ${escapeMarkdown(abilityNames)}${abilityHidden ? ` · **Hidden** ${escapeMarkdown(abilityHidden)}` : ""}`,
 		`**Height** ${height} m · **Weight** ${weight} kg`,
 		`**Gender** ${escapeMarkdown(demographics)} · **Catch chance** ${escapeMarkdown(percentageWithOrdinaryPokeballAtFullHealth)}`,

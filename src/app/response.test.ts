@@ -126,3 +126,12 @@ test("keeps Open Graph when the component payload cannot fit without flavor", ()
 	expect(html).toContain('property="og:description"');
 	expect(html).toContain(pikachu.sprite);
 });
+
+test("renders custom type icons without type names in the Discord card", () => {
+	const html = getEmbedHTML({ ...pikachu, types: [{ name: "Water" }, { name: "Dark" }] });
+	const { component } = JSON.parse(componentJSON(html)!);
+	const [typeLine] = component.components[3].content.split("\n");
+
+	expect(typeLine).toBe("<:watertype:1038083426110160926> <:darktype:1038083430166044773> · **Tier** PU");
+	expect(html).toContain("Type: Water💧 Dark🌙");
+});
