@@ -22,6 +22,7 @@ const pikachu: Pokemon = {
 	weight: 60,
 	abilities: { first: { name: "Static" }, second: null, hidden: { name: "Lightning Rod" } },
 	color: "Yellow",
+	smogonPage: "https://www.smogon.com/dex/sv/pokemon/pikachu",
 	smogonTier: "PU",
 };
 
@@ -87,22 +88,27 @@ test("renders a single accented container with sprite, byline, flavor, stats and
 	expect(component.components[4].content).toBe("*A test description\\.*");
 	expect(component.components[8].components).toEqual([
 		{ type: 2, style: 5, label: "Serebii", url: "https://www.serebii.net/pokemon/pikachu" },
-		{ type: 2, style: 5, label: "Pokémon Database", url: "https://pokemondb.net/pokedex/pikachu" },
-		{ type: 2, style: 5, label: "Smogon", url: "https://www.smogon.com/dex/sv/pokemon/pikachu/" },
+		{ type: 2, style: 5, label: "Smogon", url: pikachu.smogonPage },
 	]);
 	expect(html).toContain('name="theme-color"');
 	expect(html).toContain("?sprite=shiny%26back");
 });
 
 test("links alternate forms to the base species and omits an invalid sprite", () => {
-	const html = getEmbedHTML({ ...pikachu, num: 122, species: "mr-mime-galar", baseSpecies: "Mr. Mime", forme: "Galar" }, null, "");
+	const html = getEmbedHTML({
+		...pikachu,
+		num: 122,
+		species: "Mr. Mime-Galar",
+		baseSpecies: "Mr. Mime",
+		forme: "Galar",
+		smogonPage: "https://www.smogon.com/dex/ss/pokemon/mr--mime-galar",
+	}, null, "");
 	const { component } = JSON.parse(componentJSON(html)!);
 
 	expect(component.components[0]).toMatchObject({ type: 10, content: expect.stringContaining("Galar") });
 	expect(component.components.at(-1).components.map(({ url }: { url: string }) => url)).toEqual([
 		"https://www.serebii.net/pokemon/mr.mime",
-		"https://pokemondb.net/pokedex/mr-mime",
-		"https://www.smogon.com/dex/sv/pokemon/mr-mime-galar/",
+		"https://www.smogon.com/dex/ss/pokemon/mr--mime-galar",
 	]);
 });
 

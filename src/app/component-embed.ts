@@ -52,23 +52,16 @@ const serebiiSlugByDexNumber = new Map([
 	[1004, "chi-yu"],
 ]);
 
-function speciesSlug(species: string): string {
-	return species.trim().toLowerCase().replaceAll("é", "e").replaceAll("♀", "-f").replaceAll("♂", "-m")
-		.replace(/[.'’]/g, "").replace(/\s+/g, "-").replace(/-+/g, "-");
-}
-
 function referenceLinks(mon: Pokemon) {
-	const slug = speciesSlug(mon.baseSpecies || mon.species);
-	const validSlug = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-	if (!validSlug.test(slug) || !Number.isSafeInteger(mon.num) || mon.num < 1) return [];
-	const formSlug = speciesSlug(mon.species);
-	const smogonSlug = validSlug.test(formSlug) ? formSlug : slug;
+	const species = (mon.baseSpecies || mon.species).trim().toLowerCase();
+	const slug = species.replaceAll("é", "e").replaceAll("♀", "-f").replaceAll("♂", "-m")
+		.replace(/[.'’]/g, "").replace(/\s+/g, "-").replace(/-+/g, "-");
+	if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug) || !Number.isSafeInteger(mon.num) || mon.num < 1) return [];
 
 	const serebiiSlug = serebiiSlugByDexNumber.get(mon.num) ?? slug.replaceAll("-", "");
 	return [
 		{ type: 2, style: 5, label: "Serebii", url: `https://www.serebii.net/pokemon/${serebiiSlug}` },
-		{ type: 2, style: 5, label: "Pokémon Database", url: `https://pokemondb.net/pokedex/${slug}` },
-		{ type: 2, style: 5, label: "Smogon", url: `https://www.smogon.com/dex/sv/pokemon/${smogonSlug}/` },
+		{ type: 2, style: 5, label: "Smogon", url: mon.smogonPage },
 	];
 }
 
