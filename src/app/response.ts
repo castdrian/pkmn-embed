@@ -1,6 +1,6 @@
 import { escapeMarkdown, getComponentEmbed } from "./component-embed";
 import { resolveColor, typeWithUnicodeEmoji } from "./util";
-import { getFallbackSprite } from "./sprites";
+import { getFallbackSprite, getSpriteVariant } from "./sprites";
 import type { Pokemon } from "./types";
 
 const typeIcons = new Map([
@@ -77,15 +77,19 @@ export function getEmbedHTML(mon: Pokemon, query?: string | null, thumbnail = ge
 	].join("\n");
 	const typeLine = `${icons ? `${icons} · ` : ""}**Tier** ${escapeMarkdown(smogonTier)}`;
 	const abilityNames = [ability1, ability2].filter(Boolean).join(" / ");
+	const { shiny, facing } = getSpriteVariant(query);
+	const spriteCaption = [shiny ? "Shiny" : "", facing === "back" ? "Back view" : ""].filter(Boolean).join(" · ");
+	const baseStatTotal = hp + attack + defense + specialattack + specialdefense + speed;
 	const details = [
-		`**Abilities** ${escapeMarkdown(abilityNames)}${abilityHidden ? ` · **Hidden** ${escapeMarkdown(abilityHidden)}` : ""}`,
+		`**Abilities** ${escapeMarkdown(abilityNames)}${abilityHidden ? ` · ${escapeMarkdown(abilityHidden)} (Hidden)` : ""}`,
 		`**Height** ${height} m · **Weight** ${weight} kg`,
 		`**Gender** ${escapeMarkdown(demographics)} · **Catch rate** ${escapeMarkdown(percentageWithOrdinaryPokeballAtFullHealth)}`,
-		"**Base stats**",
+		"-# Standard Poké Ball at full HP",
+		`**Base stats** · ${baseStatTotal} BST`,
 		`${hp} HP · ${attack} Atk · ${defense} Def`,
 		`${specialattack} SpA · ${specialdefense} SpD · ${speed} Spe`,
 	].join("\n");
-	const payload = getComponentEmbed(mon, accent, thumbnail, heading, typeLine, details, flavor.trim());
+	const payload = getComponentEmbed(mon, accent, thumbnail, spriteCaption, heading, typeLine, details, flavor.trim());
 
 	return `
 	<html>
