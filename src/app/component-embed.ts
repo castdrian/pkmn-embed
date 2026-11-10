@@ -1,3 +1,4 @@
+import { spriteVariants } from "./sprites";
 import type { Pokemon } from "./types";
 
 const maxPayloadBytes = 3000;
@@ -57,23 +58,28 @@ function isSpriteURL(value: string): boolean {
 export function getComponentEmbed(
 	mon: Pokemon,
 	color: string,
-	sprite: string,
+	sprites: string[],
 	heading: string,
 	details: string,
 	flavor: string,
 ): string {
-	const gallery = isSpriteURL(sprite) ? [{ type: 12, items: [{ media: { url: sprite } }] }] : [];
+	const items = spriteVariants.flatMap(({ label }, index) => {
+		const url = sprites[index];
+		return url && isSpriteURL(url) ? [{ media: { url }, description: label }] : [];
+	});
+	const gallery = items.length ? [{ type: 12, items }] : [];
+	const divider = { type: 14, spacing: 1 };
 	const links = referenceLinks(mon);
-	const actions = links.length ? [{ type: 1, components: links }] : [];
+	const actions = links.length ? [divider, { type: 1, components: links }] : [];
 	const serialize = (excerpt: string) => JSON.stringify({
 		component: {
 			type: 17,
 			accent_color: Number.parseInt(color.slice(1), 16),
 			components: [
-				...gallery,
 				textDisplay(heading),
+				...gallery,
 				...(excerpt ? [textDisplay(escapeMarkdown(excerpt))] : []),
-				{ type: 14, spacing: 1 },
+				divider,
 				textDisplay(details),
 				...actions,
 			],
