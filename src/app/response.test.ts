@@ -62,16 +62,17 @@ function componentJSON(html: string): string | undefined {
 	return html.match(/<script id="discord:component-embed" type="application\/json">([\s\S]*?)<\/script>/)?.[1];
 }
 
-test("renders a single accented container with sprite, stats, flavor and reference buttons", () => {
+test("renders a single accented container with sprite, byline, flavor, stats and reference buttons", () => {
 	const html = getEmbedHTML(pikachu, "shiny&back", pikachu.shinyBackSprite);
 	const { component } = JSON.parse(componentJSON(html)!);
 
 	expect(component).toMatchObject({ type: 17, accent_color: 0xfff359 });
-	expect(component.components.map(({ type }: { type: number }) => type)).toEqual([9, 10, 14, 10, 1]);
-	expect(component.components[0].accessory).toEqual({ type: 11, media: { url: pikachu.shinyBackSprite } });
-	expect(component.components[1].content).toContain("35 HP");
-	expect(component.components[3].content).toContain("A test description");
-	expect(component.components[4].components).toEqual([
+	expect(component.components.map(({ type }: { type: number }) => type)).toEqual([12, 10, 10, 14, 10, 1]);
+	expect(component.components[0].items).toEqual([{ media: { url: pikachu.shinyBackSprite } }]);
+	expect(component.components[1].content).toContain("\n-# The Mouse Pokémon");
+	expect(component.components[4].content).toContain("35 HP");
+	expect(component.components[2].content).toContain("A test description");
+	expect(component.components[5].components).toEqual([
 		{ type: 2, style: 5, label: "Serebii", url: "https://www.serebii.net/pokemon/pikachu" },
 		{ type: 2, style: 5, label: "Pokémon Database", url: "https://pokemondb.net/pokedex/pikachu" },
 	]);
@@ -79,7 +80,7 @@ test("renders a single accented container with sprite, stats, flavor and referen
 	expect(html).toContain("?sprite=shiny%26back");
 });
 
-test("links alternate forms to the base species and omits an invalid thumbnail", () => {
+test("links alternate forms to the base species and omits an invalid sprite", () => {
 	const html = getEmbedHTML({ ...pikachu, num: 122, species: "mr-mime-galar", baseSpecies: "Mr. Mime", forme: "Galar" }, null, "");
 	const { component } = JSON.parse(componentJSON(html)!);
 
@@ -96,7 +97,7 @@ test("escapes upstream text and shortens multibyte flavor within the byte limit"
 		flavorTexts: [{ flavor: '</script> "**' + "✨".repeat(3000) }],
 	});
 	const payload = componentJSON(html)!;
-	const flavor = JSON.parse(payload).component.components[3].content;
+	const flavor = JSON.parse(payload).component.components[2].content;
 
 	expect(new TextEncoder().encode(payload).length).toBeLessThanOrEqual(3000);
 	expect(payload).toContain("\\u003c");

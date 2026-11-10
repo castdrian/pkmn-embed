@@ -44,7 +44,7 @@ function referenceLinks(mon: Pokemon) {
 	];
 }
 
-function isThumbnailURL(value: string): boolean {
+function isSpriteURL(value: string): boolean {
 	if (!value || value.length > 2048) return false;
 	try {
 		const url = new URL(value);
@@ -57,15 +57,12 @@ function isThumbnailURL(value: string): boolean {
 export function getComponentEmbed(
 	mon: Pokemon,
 	color: string,
-	thumbnail: string,
+	sprite: string,
 	heading: string,
 	details: string,
 	flavor: string,
 ): string {
-	const title = textDisplay(heading);
-	const header = isThumbnailURL(thumbnail)
-		? { type: 9, components: [title], accessory: { type: 11, media: { url: thumbnail } } }
-		: title;
+	const gallery = isSpriteURL(sprite) ? [{ type: 12, items: [{ media: { url: sprite } }] }] : [];
 	const links = referenceLinks(mon);
 	const actions = links.length ? [{ type: 1, components: links }] : [];
 	const serialize = (excerpt: string) => JSON.stringify({
@@ -73,9 +70,11 @@ export function getComponentEmbed(
 			type: 17,
 			accent_color: Number.parseInt(color.slice(1), 16),
 			components: [
-				header,
+				...gallery,
+				textDisplay(heading),
+				...(excerpt ? [textDisplay(escapeMarkdown(excerpt))] : []),
+				{ type: 14, spacing: 1 },
 				textDisplay(details),
-				...(excerpt ? [{ type: 14, spacing: 1 }, textDisplay(escapeMarkdown(excerpt))] : []),
 				...actions,
 			],
 		},
