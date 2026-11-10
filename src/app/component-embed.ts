@@ -80,6 +80,7 @@ export function getComponentEmbed(
 	color: string,
 	sprite: string,
 	heading: string,
+	typeLine: string,
 	details: string,
 	flavor: string,
 ): string {
@@ -93,6 +94,8 @@ export function getComponentEmbed(
 			accent_color: Number.parseInt(color.slice(1), 16),
 			components: [
 				textDisplay(heading),
+				divider,
+				textDisplay(typeLine),
 				...gallery,
 				...(excerpt ? [textDisplay(formatFlavor(excerpt))] : []),
 				divider,
