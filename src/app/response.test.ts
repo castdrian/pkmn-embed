@@ -34,7 +34,7 @@ test("keeps the donation link out of the Open Graph description", () => {
 	expect(html).toContain("A test description.");
 });
 
-test("selects the compact sprite from the sprite argument", () => {
+test("selects the gallery sprite from the sprite argument", () => {
 	const variants = [
 		[null, pikachu.sprite],
 		["shiny", pikachu.shinySprite],
@@ -47,7 +47,7 @@ test("selects the compact sprite from the sprite argument", () => {
 		const html = getEmbedHTML(pikachu, query);
 		const { component } = JSON.parse(componentJSON(html)!);
 
-		expect(component.components[0].accessory.media.url).toBe(expected);
+		expect(component.components[1].items[0].media.url).toBe(expected);
 		expect(html).toContain(`<meta property="og:image" content="${expected}"`);
 	}
 });
@@ -79,12 +79,12 @@ test("renders a single accented container with sprite, byline, flavor, stats and
 	const { component } = JSON.parse(componentJSON(html)!);
 
 	expect(component).toMatchObject({ type: 17, accent_color: 0xfff359 });
-	expect(component.components.map(({ type }: { type: number }) => type)).toEqual([9, 10, 14, 10, 14, 1]);
-	expect(component.components[0].accessory).toEqual({ type: 11, media: { url: pikachu.shinyBackSprite } });
-	expect(component.components[0].components[0].content).toContain("\n-# The Mouse Pokémon");
-	expect(component.components[3].content).toContain("35 HP");
-	expect(component.components[1].content).toContain("A test description");
-	expect(component.components[5].components).toEqual([
+	expect(component.components.map(({ type }: { type: number }) => type)).toEqual([10, 12, 10, 14, 10, 14, 1]);
+	expect(component.components[1].items).toEqual([{ media: { url: pikachu.shinyBackSprite } }]);
+	expect(component.components[0].content).toContain("\n-# The Mouse Pokémon");
+	expect(component.components[4].content).toContain("**Base stats**\n35 HP · 55 Atk · 40 Def\n50 SpA · 50 SpD · 90 Spe");
+	expect(component.components[2].content).toBe("*A test description\\.*");
+	expect(component.components[6].components).toEqual([
 		{ type: 2, style: 5, label: "Serebii", url: "https://www.serebii.net/pokemon/pikachu" },
 		{ type: 2, style: 5, label: "Pokémon Database", url: "https://pokemondb.net/pokedex/pikachu" },
 	]);
@@ -109,13 +109,13 @@ test("escapes upstream text and shortens multibyte flavor within the byte limit"
 		flavorTexts: [{ flavor: '</script> "**' + "✨".repeat(3000) }],
 	});
 	const payload = componentJSON(html)!;
-	const flavor = JSON.parse(payload).component.components[1].content;
+	const flavor = JSON.parse(payload).component.components[2].content;
 
 	expect(new TextEncoder().encode(payload).length).toBeLessThanOrEqual(3000);
 	expect(payload).toContain("\\u003c");
 	expect(payload).not.toContain("</script>");
 	expect(flavor).toContain("\\*\\*");
-	expect(flavor.endsWith("…")).toBe(true);
+	expect(flavor.endsWith("…*")).toBe(true);
 	expect(html).toContain("&lt;/script&gt; &quot;");
 });
 
@@ -130,8 +130,20 @@ test("keeps Open Graph when the component payload cannot fit without flavor", ()
 test("renders custom type icons without type names in the Discord card", () => {
 	const html = getEmbedHTML({ ...pikachu, types: [{ name: "Water" }, { name: "Dark" }] });
 	const { component } = JSON.parse(componentJSON(html)!);
-	const [typeLine] = component.components[3].content.split("\n");
+	const typeLine = component.components[0].content.split("\n").at(-1);
 
 	expect(typeLine).toBe("<:watertype:1038083426110160926> <:darktype:1038083430166044773> · **Tier** PU");
 	expect(html).toContain("Type: Water💧 Dark🌙");
+});
+
+test("wraps flavor text at word boundaries and italicizes each line", () => {
+	const html = getEmbedHTML({
+		...pikachu,
+		flavorTexts: [{ flavor: "It stores electricity in its cheeks and releases it when threatened." }],
+	});
+	const { component } = JSON.parse(componentJSON(html)!);
+
+	expect(component.components[2].content).toBe(
+		"*It stores electricity in its cheeks and*\n*releases it when threatened\\.*",
+	);
 });
