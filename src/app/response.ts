@@ -28,7 +28,12 @@ function escapeHTML(value: string): string {
 	return value.replaceAll("&", "&amp;").replaceAll('"', "&quot;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 }
 
-export function getEmbedHTML(mon: Pokemon, query?: string | null, thumbnail = getFallbackSprite(mon, query)): string {
+export function getEmbedHTML(
+	mon: Pokemon,
+	shiny = false,
+	front = getFallbackSprite(mon, shiny ? "shiny" : null),
+	back = getFallbackSprite(mon, shiny ? "shiny&back" : "back"),
+): string {
 	const {
 		num,
 		species,
@@ -64,7 +69,7 @@ export function getEmbedHTML(mon: Pokemon, query?: string | null, thumbnail = ge
 
 	const description = `${classification ? `The ${classification}\n\n` : ""}Type: ${typeWithUnicodeEmoji(type1.name)}${type2 ? ` ${typeWithUnicodeEmoji(type2)}` : ""} | Tier: ${smogonTier}\nAbility: ${ability1}${ability2 ? `/${ability2}` : ""}${abilityHidden ? ` | HA: ${abilityHidden}` : ""}\nHeight: ${height} M | Weight: ${weight} KG\nBase Stats: ${stats}\n\n${flavor}`;
 	const url = new URL(encodeURIComponent(species), "https://embed.pkmn.dev/");
-	if (query) url.searchParams.set("sprite", query);
+	if (shiny) url.searchParams.set("sprite", "shiny");
 	const shareURL = escapeHTML(url.href);
 	const name = baseSpecies || species;
 	const title = `#${num} ${name.charAt(0).toUpperCase()}${name.slice(1)}${forme ? ` (${forme})` : ""}`;
@@ -85,14 +90,14 @@ export function getEmbedHTML(mon: Pokemon, query?: string | null, thumbnail = ge
 		`${hp} HP · ${attack} Atk · ${defense} Def`,
 		`${specialattack} SpA · ${specialdefense} SpD · ${speed} Spe`,
 	].join("\n");
-	const payload = getComponentEmbed(mon, accent, thumbnail, heading, typeLine, details, flavor.trim());
+	const payload = getComponentEmbed(mon, accent, front, back, heading, typeLine, details, flavor.trim());
 
 	return `
 	<html>
 		<head>
 			<link rel="icon" href="https://upload.wikimedia.org/wikipedia/commons/5/53/Pok%C3%A9_Ball_icon.svg">
 			<meta property="og:title" content="${escapeHTML(`${title} (${demographics} ◓ ${percentageWithOrdinaryPokeballAtFullHealth})`)}" />
-			<meta property="og:image" content="${escapeHTML(thumbnail)}" />
+			<meta property="og:image" content="${escapeHTML(front)}" />
 			<meta property="og:description" content="${escapeHTML(description)}" />
 			<meta name="theme-color" content="${accent}" />
 			${payload ? `<script id="discord:component-embed" type="application/json">${payload}</script>` : ""}

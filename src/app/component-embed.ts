@@ -78,13 +78,18 @@ function isSpriteURL(value: string): boolean {
 export function getComponentEmbed(
 	mon: Pokemon,
 	color: string,
-	sprite: string,
+	front: string,
+	back: string,
 	heading: string,
 	typeLine: string,
 	details: string,
 	flavor: string,
 ): string {
-	const gallery = isSpriteURL(sprite) ? [{ type: 12, items: [{ media: { url: sprite } }] }] : [];
+	const items = [
+		{ media: { url: front }, description: "Front" },
+		{ media: { url: back }, description: "Back" },
+	].filter(({ media }) => isSpriteURL(media.url));
+	const gallery = items.length ? [{ type: 12, items }] : [];
 	const divider = { type: 14, spacing: 1 };
 	const links = referenceLinks(mon);
 	const actions = links.length ? [divider, { type: 1, components: links }] : [];

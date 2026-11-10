@@ -29,8 +29,12 @@ export default {
 
 		const id = decodeURIComponent(pathSegments[0] ?? "");
 		const mon = await fetchMon(id);
-		const query = url.searchParams.get("sprite");
-		const html = getEmbedHTML(mon, query, await resolveSprite(mon, query));
+		const shiny = url.searchParams.get("sprite") === "shiny";
+		const [front, back] = await Promise.all([
+			resolveSprite(mon, shiny ? "shiny" : null),
+			resolveSprite(mon, shiny ? "shiny&back" : "back"),
+		]);
+		const html = getEmbedHTML(mon, shiny, front, back);
 
 		return htmlResponse(html);
 	},
