@@ -37,18 +37,21 @@ test("keeps the donation link out of the Open Graph description", () => {
 
 test("selects the gallery sprite from the sprite argument", () => {
 	const variants = [
-		[null, pikachu.sprite],
-		["shiny", pikachu.shinySprite],
-		["back", pikachu.backSprite],
-		["shiny&back", pikachu.shinyBackSprite],
-		["back&shiny", pikachu.shinyBackSprite],
+		[null, pikachu.sprite, null],
+		["shiny", pikachu.shinySprite, "-# Shiny"],
+		["back", pikachu.backSprite, "-# Back view"],
+		["shiny&back", pikachu.shinyBackSprite, "-# Shiny · Back view"],
+		["back&shiny", pikachu.shinyBackSprite, "-# Shiny · Back view"],
 	] as const;
 
-	for (const [query, expected] of variants) {
+	for (const [query, expected, caption] of variants) {
 		const html = getEmbedHTML(pikachu, query);
 		const { component } = JSON.parse(componentJSON(html)!);
 
 		expect(component.components[3].items[0].media.url).toBe(expected);
+		const nextLine = component.components[4].content;
+		if (caption) expect(nextLine).toBe(caption);
+		else expect(nextLine).not.toStartWith("-#");
 		expect(html).toContain(`<meta property="og:image" content="${expected}"`);
 	}
 });
@@ -80,13 +83,14 @@ test("renders a single accented container with sprite, byline, flavor, stats and
 	const { component } = JSON.parse(componentJSON(html)!);
 
 	expect(component).toMatchObject({ type: 17, accent_color: 0xfff359 });
-	expect(component.components.map(({ type }: { type: number }) => type)).toEqual([10, 14, 10, 12, 10, 14, 10, 14, 1]);
+	expect(component.components.map(({ type }: { type: number }) => type)).toEqual([10, 14, 10, 12, 10, 10, 14, 10, 14, 1]);
 	expect(component.components[3].items).toEqual([{ media: { url: pikachu.shinyBackSprite } }]);
 	expect(component.components[0].content).toBe("**\\#25 Pikachu**\n-# The Mouse Pokémon");
-	expect(component.components[6].content).toContain("**Catch rate**");
-	expect(component.components[6].content).toContain("**Base stats**\n35 HP · 55 Atk · 40 Def\n50 SpA · 50 SpD · 90 Spe");
-	expect(component.components[4].content).toBe("*A test description\\.*");
-	expect(component.components[8].components).toEqual([
+	expect(component.components[7].content).toContain("**Catch rate** 35\\.2%\n-# Standard Poké Ball at full HP");
+	expect(component.components[7].content).toContain("**Abilities** Static · Lightning Rod (Hidden)");
+	expect(component.components[7].content).toContain("**Base stats** · 320 BST\n35 HP · 55 Atk · 40 Def\n50 SpA · 50 SpD · 90 Spe");
+	expect(component.components[5].content).toBe("*A test description\\.*");
+	expect(component.components[9].components).toEqual([
 		{ type: 2, style: 5, label: "Serebii", url: "https://www.serebii.net/pokemon/pikachu" },
 		{ type: 2, style: 5, label: "Smogon", url: pikachu.smogonPage },
 	]);

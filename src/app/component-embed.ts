@@ -79,12 +79,16 @@ export function getComponentEmbed(
 	mon: Pokemon,
 	color: string,
 	sprite: string,
+	spriteCaption: string,
 	heading: string,
 	typeLine: string,
 	details: string,
 	flavor: string,
 ): string {
-	const gallery = isSpriteURL(sprite) ? [{ type: 12, items: [{ media: { url: sprite } }] }] : [];
+	const gallery = isSpriteURL(sprite) ? [
+		{ type: 12, items: [{ media: { url: sprite } }] },
+		...(spriteCaption ? [textDisplay(`-# ${spriteCaption}`)] : []),
+	] : [];
 	const divider = { type: 14, spacing: 1 };
 	const links = referenceLinks(mon);
 	const actions = links.length ? [divider, { type: 1, components: links }] : [];
