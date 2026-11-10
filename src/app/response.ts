@@ -84,7 +84,6 @@ export function getEmbedHTML(mon: Pokemon, query?: string | null, thumbnail = ge
 		`**Abilities** ${escapeMarkdown(abilityNames)}${abilityHidden ? ` · ${escapeMarkdown(abilityHidden)} (Hidden)` : ""}`,
 		`**Height** ${height} m · **Weight** ${weight} kg`,
 		`**Gender** ${escapeMarkdown(demographics)} · **Catch rate** ${escapeMarkdown(percentageWithOrdinaryPokeballAtFullHealth)}`,
-		"-# Standard Poké Ball at full HP",
 		`**Base stats** · ${baseStatTotal} BST`,
 		`${hp} HP · ${attack} Atk · ${defense} Def`,
 		`${specialattack} SpA · ${specialdefense} SpD · ${speed} Spe`,

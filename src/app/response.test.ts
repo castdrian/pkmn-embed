@@ -86,7 +86,7 @@ test("renders a single accented container with sprite, byline, flavor, stats and
 	expect(component.components.map(({ type }: { type: number }) => type)).toEqual([10, 14, 10, 12, 10, 10, 14, 10, 14, 1]);
 	expect(component.components[3].items).toEqual([{ media: { url: pikachu.shinyBackSprite } }]);
 	expect(component.components[0].content).toBe("**\\#25 Pikachu**\n-# The Mouse Pokémon");
-	expect(component.components[7].content).toContain("**Catch rate** 35\\.2%\n-# Standard Poké Ball at full HP");
+	expect(component.components[7].content).toContain("**Catch rate** 35\\.2%");
 	expect(component.components[7].content).toContain("**Abilities** Static · Lightning Rod (Hidden)");
 	expect(component.components[7].content).toContain("**Base stats** · 320 BST\n35 HP · 55 Atk · 40 Def\n50 SpA · 50 SpD · 90 Spe");
 	expect(component.components[5].content).toBe("*A test description\\.*");
