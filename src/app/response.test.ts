@@ -26,12 +26,30 @@ const pikachu: Pokemon = {
 };
 
 test("keeps the donation link out of the Open Graph description", () => {
-	const html = getEmbedHTML(pikachu);
+	const html = getEmbedHTML(pikachu, null, pikachu.sprite);
 	const openGraphDescription = html.match(/<meta property="og:description"[^>]+>/)?.[0] ?? "";
 
 	expect(openGraphDescription).not.toContain("ko-fi");
 	expect(html).toContain("https://ko-fi.com/castdrian");
 	expect(html).toContain("A test description.");
+});
+
+test("selects the compact sprite from the sprite argument", () => {
+	const variants = [
+		[null, pikachu.sprite],
+		["shiny", pikachu.shinySprite],
+		["back", pikachu.backSprite],
+		["shiny&back", pikachu.shinyBackSprite],
+		["back&shiny", pikachu.shinyBackSprite],
+	] as const;
+
+	for (const [query, expected] of variants) {
+		const html = getEmbedHTML(pikachu, query);
+		const { component } = JSON.parse(componentJSON(html)!);
+
+		expect(component.components[0].accessory.media.url).toBe(expected);
+		expect(html).toContain(`<meta property="og:image" content="${expected}"`);
+	}
 });
 
 test("prefers an available HD animated sprite", async () => {
@@ -43,48 +61,42 @@ test("prefers an available HD animated sprite", async () => {
 		return new Response(null, { status: 404 });
 	};
 
-	expect(await resolveSprite(pikachu, { facing: "front", shiny: false }, fetcher)).toBe(hdSprite);
+	expect(await resolveSprite(pikachu, null, fetcher)).toBe(hdSprite);
 });
 
 test("falls back to the API sprite when no HD animated sprite is available", async () => {
 	const fetcher: typeof fetch = async () => new Response(null, { status: 404 });
 
-	expect(await resolveSprite(pikachu, { facing: "back", shiny: false }, fetcher)).toBe(pikachu.backSprite);
+	expect(await resolveSprite(pikachu, "back", fetcher)).toBe(pikachu.backSprite);
 });
 
 function componentJSON(html: string): string | undefined {
 	return html.match(/<script id="discord:component-embed" type="application\/json">([\s\S]*?)<\/script>/)?.[1];
 }
 
-test("renders a single accented container with byline, four sprites, flavor, stats and reference buttons", () => {
-	const html = getEmbedHTML(pikachu);
+test("renders a single accented container with sprite, byline, flavor, stats and reference buttons", () => {
+	const html = getEmbedHTML(pikachu, "shiny&back", pikachu.shinyBackSprite);
 	const { component } = JSON.parse(componentJSON(html)!);
 
 	expect(component).toMatchObject({ type: 17, accent_color: 0xfff359 });
-	expect(component.components.map(({ type }: { type: number }) => type)).toEqual([10, 12, 10, 14, 10, 14, 1]);
-	expect(component.components[1].items).toEqual([
-		{ media: { url: pikachu.sprite }, description: "Front" },
-		{ media: { url: pikachu.backSprite }, description: "Back" },
-		{ media: { url: pikachu.shinySprite }, description: "Shiny front" },
-		{ media: { url: pikachu.shinyBackSprite }, description: "Shiny back" },
-	]);
-	expect(component.components[0].content).toContain("\n-# The Mouse Pokémon");
-	expect(component.components[4].content).toContain("35 HP");
-	expect(component.components[2].content).toContain("A test description");
-	expect(component.components[6].components).toEqual([
+	expect(component.components.map(({ type }: { type: number }) => type)).toEqual([9, 10, 14, 10, 14, 1]);
+	expect(component.components[0].accessory).toEqual({ type: 11, media: { url: pikachu.shinyBackSprite } });
+	expect(component.components[0].components[0].content).toContain("\n-# The Mouse Pokémon");
+	expect(component.components[3].content).toContain("35 HP");
+	expect(component.components[1].content).toContain("A test description");
+	expect(component.components[5].components).toEqual([
 		{ type: 2, style: 5, label: "Serebii", url: "https://www.serebii.net/pokemon/pikachu" },
 		{ type: 2, style: 5, label: "Pokémon Database", url: "https://pokemondb.net/pokedex/pikachu" },
 	]);
 	expect(html).toContain('name="theme-color"');
-	expect(html).not.toContain("?sprite=");
+	expect(html).toContain("?sprite=shiny%26back");
 });
 
 test("links alternate forms to the base species and omits an invalid sprite", () => {
-	const html = getEmbedHTML({ ...pikachu, num: 122, species: "mr-mime-galar", baseSpecies: "Mr. Mime", forme: "Galar" }, ["", pikachu.backSprite]);
+	const html = getEmbedHTML({ ...pikachu, num: 122, species: "mr-mime-galar", baseSpecies: "Mr. Mime", forme: "Galar" }, null, "");
 	const { component } = JSON.parse(componentJSON(html)!);
 
 	expect(component.components[0]).toMatchObject({ type: 10, content: expect.stringContaining("Galar") });
-	expect(component.components[1].items).toEqual([{ media: { url: pikachu.backSprite }, description: "Back" }]);
 	expect(component.components.at(-1).components.map(({ url }: { url: string }) => url)).toEqual([
 		"https://www.serebii.net/pokemon/mr.mime",
 		"https://pokemondb.net/pokedex/mr-mime",
@@ -97,7 +109,7 @@ test("escapes upstream text and shortens multibyte flavor within the byte limit"
 		flavorTexts: [{ flavor: '</script> "**' + "✨".repeat(3000) }],
 	});
 	const payload = componentJSON(html)!;
-	const flavor = JSON.parse(payload).component.components[2].content;
+	const flavor = JSON.parse(payload).component.components[1].content;
 
 	expect(new TextEncoder().encode(payload).length).toBeLessThanOrEqual(3000);
 	expect(payload).toContain("\\u003c");

@@ -1,4 +1,3 @@
-import { spriteVariants } from "./sprites";
 import type { Pokemon } from "./types";
 
 const maxPayloadBytes = 3000;
@@ -58,16 +57,15 @@ function isSpriteURL(value: string): boolean {
 export function getComponentEmbed(
 	mon: Pokemon,
 	color: string,
-	sprites: string[],
+	sprite: string,
 	heading: string,
 	details: string,
 	flavor: string,
 ): string {
-	const items = spriteVariants.flatMap(({ label }, index) => {
-		const url = sprites[index];
-		return url && isSpriteURL(url) ? [{ media: { url }, description: label }] : [];
-	});
-	const gallery = items.length ? [{ type: 12, items }] : [];
+	const title = textDisplay(heading);
+	const header = isSpriteURL(sprite)
+		? { type: 9, components: [title], accessory: { type: 11, media: { url: sprite } } }
+		: title;
 	const divider = { type: 14, spacing: 1 };
 	const links = referenceLinks(mon);
 	const actions = links.length ? [divider, { type: 1, components: links }] : [];
@@ -76,8 +74,7 @@ export function getComponentEmbed(
 			type: 17,
 			accent_color: Number.parseInt(color.slice(1), 16),
 			components: [
-				textDisplay(heading),
-				...gallery,
+				header,
 				...(excerpt ? [textDisplay(escapeMarkdown(excerpt))] : []),
 				divider,
 				textDisplay(details),
