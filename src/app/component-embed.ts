@@ -1,6 +1,7 @@
 import type { Pokemon } from "./types";
 
 const maxPayloadBytes = 3000;
+const flavorLineLength = 44;
 const encoder = new TextEncoder();
 
 export function escapeMarkdown(value: string): string {
@@ -9,6 +10,26 @@ export function escapeMarkdown(value: string): string {
 
 function textDisplay(content: string) {
 	return { type: 10, content };
+}
+
+function formatFlavor(value: string): string {
+	const lines: string[] = [];
+	let line = "";
+	let length = 0;
+
+	for (const word of value.split(/\s+/)) {
+		const wordLength = Array.from(word).length;
+		if (line && length + 1 + wordLength > flavorLineLength) {
+			lines.push(line);
+			line = "";
+			length = 0;
+		}
+		line = line ? `${line} ${word}` : word;
+		length += length ? 1 + wordLength : wordLength;
+	}
+
+	if (line) lines.push(line);
+	return lines.map((text) => `*${escapeMarkdown(text)}*`).join("\n");
 }
 
 const serebiiSlugByDexNumber = new Map([
@@ -73,7 +94,7 @@ export function getComponentEmbed(
 			components: [
 				textDisplay(heading),
 				...gallery,
-				...(excerpt ? [textDisplay(`*${escapeMarkdown(excerpt)}*`)] : []),
+				...(excerpt ? [textDisplay(formatFlavor(excerpt))] : []),
 				divider,
 				textDisplay(details),
 				...actions,

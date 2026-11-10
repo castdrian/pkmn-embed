@@ -135,3 +135,15 @@ test("renders custom type icons without type names in the Discord card", () => {
 	expect(typeLine).toBe("<:watertype:1038083426110160926> <:darktype:1038083430166044773> · **Tier** PU");
 	expect(html).toContain("Type: Water💧 Dark🌙");
 });
+
+test("wraps flavor text at word boundaries and italicizes each line", () => {
+	const html = getEmbedHTML({
+		...pikachu,
+		flavorTexts: [{ flavor: "It stores electricity in its cheeks and releases it when threatened." }],
+	});
+	const { component } = JSON.parse(componentJSON(html)!);
+
+	expect(component.components[2].content).toBe(
+		"*It stores electricity in its cheeks and*\n*releases it when threatened\\.*",
+	);
+});
