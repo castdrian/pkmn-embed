@@ -88,6 +88,7 @@ test("renders a single accented container with sprite, byline, flavor, stats and
 	expect(component.components[8].components).toEqual([
 		{ type: 2, style: 5, label: "Serebii", url: "https://www.serebii.net/pokemon/pikachu" },
 		{ type: 2, style: 5, label: "Pokémon Database", url: "https://pokemondb.net/pokedex/pikachu" },
+		{ type: 2, style: 5, label: "Smogon", url: "https://www.smogon.com/dex/sv/pokemon/pikachu/" },
 	]);
 	expect(html).toContain('name="theme-color"');
 	expect(html).toContain("?sprite=shiny%26back");
@@ -101,6 +102,7 @@ test("links alternate forms to the base species and omits an invalid sprite", ()
 	expect(component.components.at(-1).components.map(({ url }: { url: string }) => url)).toEqual([
 		"https://www.serebii.net/pokemon/mr.mime",
 		"https://pokemondb.net/pokedex/mr-mime",
+		"https://www.smogon.com/dex/sv/pokemon/mr-mime-galar/",
 	]);
 });
 
