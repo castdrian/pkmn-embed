@@ -57,3 +57,59 @@ test("falls back to the API sprite when no HD animated sprite is available", asy
 
 	expect(await resolveSprite(pikachu, "back", fetcher)).toBe(pikachu.backSprite);
 });
+
+function componentJSON(html: string): string | undefined {
+	return html.match(/<script id="discord:component-embed" type="application\/json">([\s\S]*?)<\/script>/)?.[1];
+}
+
+test("renders a single accented container with sprite, stats, flavor and reference buttons", () => {
+	const html = getEmbedHTML(pikachu, "shiny&back", pikachu.shinyBackSprite);
+	const { component } = JSON.parse(componentJSON(html)!);
+
+	expect(component).toMatchObject({ type: 17, accent_color: 0xfff359 });
+	expect(component.components.map(({ type }: { type: number }) => type)).toEqual([9, 10, 14, 10, 1]);
+	expect(component.components[0].accessory).toEqual({ type: 11, media: { url: pikachu.shinyBackSprite } });
+	expect(component.components[1].content).toContain("35 HP");
+	expect(component.components[3].content).toContain("A test description");
+	expect(component.components[4].components).toEqual([
+		{ type: 2, style: 5, label: "Serebii", url: "https://www.serebii.net/pokemon/pikachu" },
+		{ type: 2, style: 5, label: "Pokémon Database", url: "https://pokemondb.net/pokedex/pikachu" },
+	]);
+	expect(html).toContain('name="theme-color"');
+	expect(html).toContain("?sprite=shiny%26back");
+});
+
+test("links alternate forms to the base species and omits an invalid thumbnail", () => {
+	const html = getEmbedHTML({ ...pikachu, num: 122, species: "mr-mime-galar", baseSpecies: "Mr. Mime", forme: "Galar" }, null, "");
+	const { component } = JSON.parse(componentJSON(html)!);
+
+	expect(component.components[0]).toMatchObject({ type: 10, content: expect.stringContaining("Galar") });
+	expect(component.components.at(-1).components.map(({ url }: { url: string }) => url)).toEqual([
+		"https://www.serebii.net/pokemon/mr.mime",
+		"https://pokemondb.net/pokedex/mr-mime",
+	]);
+});
+
+test("escapes upstream text and shortens multibyte flavor within the byte limit", () => {
+	const html = getEmbedHTML({
+		...pikachu,
+		flavorTexts: [{ flavor: '</script> "**' + "✨".repeat(3000) }],
+	});
+	const payload = componentJSON(html)!;
+	const flavor = JSON.parse(payload).component.components[3].content;
+
+	expect(new TextEncoder().encode(payload).length).toBeLessThanOrEqual(3000);
+	expect(payload).toContain("\\u003c");
+	expect(payload).not.toContain("</script>");
+	expect(flavor).toContain("\\*\\*");
+	expect(flavor.endsWith("…")).toBe(true);
+	expect(html).toContain("&lt;/script&gt; &quot;");
+});
+
+test("keeps Open Graph when the component payload cannot fit without flavor", () => {
+	const html = getEmbedHTML({ ...pikachu, classification: "✨".repeat(1100) });
+
+	expect(componentJSON(html)).toBeUndefined();
+	expect(html).toContain('property="og:description"');
+	expect(html).toContain(pikachu.sprite);
+});
